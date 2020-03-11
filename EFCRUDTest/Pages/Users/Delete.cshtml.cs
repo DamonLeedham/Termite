@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using EFCRUDTest.Models;
 
-namespace EFCRUDTest
+namespace EFCRUDTest.Pages.Users
 {
     public class DeleteModel : PageModel
     {
@@ -20,20 +20,29 @@ namespace EFCRUDTest
 
         [BindProperty]
         public User User { get; set; }
+        public string ErrorMessage { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int? id, bool? saveChangesError = false)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            User = await _context.User.FirstOrDefaultAsync(m => m.ID == id);
+            User = await _context.User
+                .AsNoTracking()
+                .FirstOrDefaultAsync(m => m.ID == id);
 
             if (User == null)
             {
                 return NotFound();
             }
+
+            if (saveChangesError.GetValueOrDefault())
+            {
+                ErrorMessage = "Delete failed. Try again";
+            }
+
             return Page();
         }
 
@@ -44,15 +53,27 @@ namespace EFCRUDTest
                 return NotFound();
             }
 
-            User = await _context.User.FindAsync(id);
+            var user = await _context.User
+                            .AsNoTracking()
+                            .FirstOrDefaultAsync(m => m.ID == id);
 
-            if (User != null)
+            if (user == null)
             {
-                _context.User.Remove(User);
-                await _context.SaveChangesAsync();
+                return NotFound();
             }
 
-            return RedirectToPage("./Index");
+            try
+            {
+                _context.User.Remove(user);
+                await _context.SaveChangesAsync();
+                return RedirectToPage("./Index");
+            }
+            catch (DbUpdateException /* ex */)
+            {
+                //Log the error (uncomment ex variable name and write a log.)
+                return RedirectToAction("./Delete",
+                                     new { id, saveChangesError = true });
+            }
         }
     }
 }

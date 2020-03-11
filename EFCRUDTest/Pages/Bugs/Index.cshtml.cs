@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using EFCRUDTest.Models;
 
-namespace EFCRUDTest.Pages.Users
+namespace EFCRUDTest
 {
     public class IndexModel : PageModel
     {
@@ -18,11 +18,11 @@ namespace EFCRUDTest.Pages.Users
             _context = context;
         }
 
-        public IList<User> User { get;set; }
+        public IList<Bug> Bug { get;set; }
 
         public async Task OnGetAsync()
         {
-            User = await _context.User.ToListAsync();
+            Bug = await _context.Bug.ToListAsync();
         }
     }
 }

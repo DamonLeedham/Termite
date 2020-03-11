@@ -1,0 +1,43 @@
+﻿@page
+@model EFCRUDTest.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Bug</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Bug.ProjectID)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Bug.ProjectID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Bug.StatusID)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Bug.StatusID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Bug.BugTypeID)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Bug.BugTypeID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Bug.Description)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Bug.Description)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.Bug.ID">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>

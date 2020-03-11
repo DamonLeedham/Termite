@@ -1,5 +1,5 @@
 ﻿@page
-@model EFCRUDTest.Pages.Users.IndexModel
+@model EFCRUDTest.IndexModel
 
 @{
     ViewData["Title"] = "Index";
@@ -14,28 +14,34 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.User[0].LastName)
+                @Html.DisplayNameFor(model => model.Bug[0].ProjectID)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.User[0].FirstName)
+                @Html.DisplayNameFor(model => model.Bug[0].StatusID)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.User[0].Email)
+                @Html.DisplayNameFor(model => model.Bug[0].BugTypeID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Bug[0].Description)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.User) {
+@foreach (var item in Model.Bug) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.LastName)
+                @Html.DisplayFor(modelItem => item.ProjectID)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
+                @Html.DisplayFor(modelItem => item.StatusID)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Email)
+                @Html.DisplayFor(modelItem => item.BugTypeID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |

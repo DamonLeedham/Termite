@@ -5,13 +5,9 @@ using System.Threading.Tasks;
 
 namespace EFCRUDTest.Models
 {
-    public class Bug
+    public class BugType
     {
         public int ID { get; set; }
-        public int ProjectID { get; set; }
-        public int UserID { get; set; }
-        public int StatusID { get; set; }
-        public int BugTypeID { get; set; }
         public string Description { get; set; }
     }
 }

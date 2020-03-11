@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using EFCRUDTest.Models;
 
-namespace EFCRUDTest.Pages.Users
+namespace EFCRUDTest
 {
     public class DetailsModel : PageModel
     {
@@ -18,7 +18,7 @@ namespace EFCRUDTest.Pages.Users
             _context = context;
         }
 
-        public User User { get; set; }
+        public Bug Bug { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -27,14 +27,9 @@ namespace EFCRUDTest.Pages.Users
                 return NotFound();
             }
 
-            User = await _context.User
-                        .Include(u => u.Bugs)                         
-                        .AsNoTracking()
-                        .FirstOrDefaultAsync(m => m.ID == id);
+            Bug = await _context.Bug.FirstOrDefaultAsync(m => m.ID == id);
 
-            //await _context.User.FirstOrDefaultAsync(m => m.ID == id);
-
-            if (User == null)
+            if (Bug == null)
             {
                 return NotFound();
             }

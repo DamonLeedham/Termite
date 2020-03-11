@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using EFCRUDTest.Models;
 
-namespace EFCRUDTest.Pages.Users
+namespace EFCRUDTest.Pages.Bugs
 {
     public class CreateModel : PageModel
     {
@@ -24,7 +24,7 @@ namespace EFCRUDTest.Pages.Users
         }
 
         [BindProperty]
-        public User User { get; set; }
+        public Bug Bug { get; set; }
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -33,18 +33,10 @@ namespace EFCRUDTest.Pages.Users
                 return Page();
             }
 
-            var emptyUser = new User();
+            _context.Bug.Add(Bug);
+            await _context.SaveChangesAsync();
 
-            if (await TryUpdateModelAsync<User>(
-                emptyUser,
-                "user",   // Prefix for form value.
-                u => u.FirstName, u => u.LastName, u => u.Email))
-            {
-                _context.User.Add(emptyUser);
-                await _context.SaveChangesAsync();
-                return RedirectToPage("./Index");
-            }
-            return null;
+            return RedirectToPage("./Index");
         }
     }
 }

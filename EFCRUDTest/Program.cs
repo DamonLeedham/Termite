@@ -20,7 +20,7 @@ namespace EFCRUDTest
                 try
                 {
                     var context = services.GetRequiredService<StuffContext>();
-                    context.Database.EnsureCreated();
+                    DbInitializer.Initialize(context);
                 }
                 catch (Exception ex)
                 {

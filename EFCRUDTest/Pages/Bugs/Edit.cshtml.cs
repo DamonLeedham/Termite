@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EFCRUDTest.Models;
 
-namespace EFCRUDTest.Pages.Users
+namespace EFCRUDTest
 {
     public class EditModel : PageModel
     {
@@ -20,7 +20,7 @@ namespace EFCRUDTest.Pages.Users
         }
 
         [BindProperty]
-        public User User { get; set; }
+        public Bug Bug { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -29,39 +29,46 @@ namespace EFCRUDTest.Pages.Users
                 return NotFound();
             }
 
-            User = await _context.User.FindAsync(id);
+            Bug = await _context.Bug.FirstOrDefaultAsync(m => m.ID == id);
 
-            if (User == null)
+            if (Bug == null)
             {
                 return NotFound();
             }
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            var studentToUpdate = await _context.User.FindAsync(id);
+            _context.Attach(Bug).State = EntityState.Modified;
 
-            if (await TryUpdateModelAsync<User>(
-                studentToUpdate,
-                "user",
-                u => u.FirstName, u => u.LastName, u => u.Email))
+            try
             {
                 await _context.SaveChangesAsync();
-                return RedirectToPage("./Index");
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!BugExists(Bug.ID))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
             }
 
-            return Page();
+            return RedirectToPage("./Index");
         }
 
-        private bool UserExists(int id)
+        private bool BugExists(int id)
         {
-            return _context.User.Any(e => e.ID == id);
+            return _context.Bug.Any(e => e.ID == id);
         }
     }
 }

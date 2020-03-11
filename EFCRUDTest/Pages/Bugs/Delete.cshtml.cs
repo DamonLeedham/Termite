@@ -4,23 +4,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EFCRUDTest.Models;
 
-namespace EFCRUDTest.Pages.Users
+namespace EFCRUDTest
 {
-    public class EditModel : PageModel
+    public class DeleteModel : PageModel
     {
         private readonly EFCRUDTest.Models.StuffContext _context;
 
-        public EditModel(EFCRUDTest.Models.StuffContext context)
+        public DeleteModel(EFCRUDTest.Models.StuffContext context)
         {
             _context = context;
         }
 
         [BindProperty]
-        public User User { get; set; }
+        public Bug Bug { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -29,9 +28,9 @@ namespace EFCRUDTest.Pages.Users
                 return NotFound();
             }
 
-            User = await _context.User.FindAsync(id);
+            Bug = await _context.Bug.FirstOrDefaultAsync(m => m.ID == id);
 
-            if (User == null)
+            if (Bug == null)
             {
                 return NotFound();
             }
@@ -40,28 +39,20 @@ namespace EFCRUDTest.Pages.Users
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            if (!ModelState.IsValid)
+            if (id == null)
             {
-                return Page();
+                return NotFound();
             }
 
-            var studentToUpdate = await _context.User.FindAsync(id);
+            Bug = await _context.Bug.FindAsync(id);
 
-            if (await TryUpdateModelAsync<User>(
-                studentToUpdate,
-                "user",
-                u => u.FirstName, u => u.LastName, u => u.Email))
+            if (Bug != null)
             {
+                _context.Bug.Remove(Bug);
                 await _context.SaveChangesAsync();
-                return RedirectToPage("./Index");
             }
 
-            return Page();
-        }
-
-        private bool UserExists(int id)
-        {
-            return _context.User.Any(e => e.ID == id);
+            return RedirectToPage("./Index");
         }
     }
 }
